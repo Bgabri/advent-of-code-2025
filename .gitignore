@@ -1,0 +1,7 @@
+.vscode
+bin
+inputs/*
+dump
+cookie.txt
+user-agent.txt
+/shaders

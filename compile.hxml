@@ -1,0 +1,6 @@
+-p src
+--dce full
+--library bglib
+--main Main
+-cpp bin
+--cmd ./bin/Main all

@@ -1,0 +1,20 @@
+
+-cp src/funs
+
+-lib bglib
+-lib heaps
+-lib hlsdl
+
+-w -WDeprecated
+--debug
+
+-hl bin/game.hl
+
+--dce full
+-D windowSize=800x600
+-D hot-reload
+-D shader_debug_dump
+
+--connect 6000
+
+--main Fun08
