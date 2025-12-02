@@ -1,3 +1,5 @@
+import eval.luv.FsEvent;
+
 import haxe.Int64;
 
 using bglib.utils.PrimitiveTools;
@@ -23,36 +25,27 @@ class Day02 implements Day {
     public function part1() {
         var total:Float = 0;
         for (id in input) {
-            var smin = id.s.substr(0, id.s.length.div(2));
-            if (id.s.length <= 1) {
-                smin = id.s;
-            }
-            var smax = "";
-            if (id.e.length % 2 == 1) {
-                smax = "9".repeat(id.e.length.div(2) + 1);
-            } else {
-                var se_h0 = id.e.substr(0, id.e.length.div(2));
-                var se_h1 = id.e.substr(id.e.length.div(2));
-                if (Std.parseInt(se_h0) < Std.parseInt(se_h1)) {
-                    smax = se_h1;
-                } else {
-                    smax = se_h0;
-                }
-            }
-
-            var min = Std.parseInt(smin);
-            var max = Std.parseInt(smax);
-
             var s = Std.parseFloat(id.s);
             var e = Std.parseFloat(id.e);
-            for (x in min...max + 1) {
-                var xx = pow(10, floor(log(x) / log(10) + 1)) * x + x;
-                if (s <= xx && xx <= e) {
-                    total += xx;
-                }
+            for (x in 0...floor(e - s) + 1) {
+                var x = x + s;
+                var ds = floor(log(x) / log(10) + 1);
+                if (ds % 2 != 0) continue;
+                var h0 = floor(x / (pow(10, ds / 2)));
+                var h1 = floor(x - (h0 * pow(10, ds / 2)));
+                if (h0 == h1) total += x;
             }
         }
         return total;
+    }
+
+    function repeat(x:Float, l:Int, n:Int) {
+        var v = 0.;
+        var l = pow(10, l);
+        for (_ in 0...n) {
+            v = v * l + x;
+        }
+        return v;
     }
 
     public function part2() {
@@ -60,13 +53,18 @@ class Day02 implements Day {
         for (id in input) {
             var s = Std.parseFloat(id.s);
             var e = Std.parseFloat(id.e);
-            for (x in 0...floor(e - s) +1) {
+            for (x in 0...floor(e - s) + 1) {
                 var x = x + s;
                 var ds = floor(log(x) / log(10) + 1);
-                if (ds % 2 != 0) continue;
-                var h0 = floor(x / (pow(10, ds / 2)));
-                var h1 = floor(x - (h0 * pow(10, ds / 2)));
-                if (h0 == h1) total += x;
+                for (n in 2...floor(ds + 1)) {
+                    if (ds % n != 0) continue;
+                    var l = ds.div(n);
+                    var head = floor(x / pow(10, ds - l));
+                    if (repeat(head, l, n) == x) {
+                        total += x;
+                        break;
+                    }
+                }
             }
         }
         return total;
